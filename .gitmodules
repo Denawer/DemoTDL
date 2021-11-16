@@ -1,0 +1,4 @@
+[submodule "ncf_care"]
+	path = ncf_care
+	url = git@github.com:yasmanycastillo/l10n_do_ncf_care.git
+	branch = master
