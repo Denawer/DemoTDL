@@ -38,7 +38,7 @@ class AccountInvoice(models.Model):
                         max_date if max_date >= date_invoice else date_invoice
                     )
 
-    @api.multi
+    
     @api.constrains("tax_line_ids")
     def _check_isr_tax(self):
         """Restrict one ISR tax per invoice"""
@@ -65,7 +65,7 @@ class AccountInvoice(models.Model):
     def _get_tax_line_ids(self):
         return self.tax_line_ids
 
-    @api.multi
+    
     @api.depends("tax_line_ids", "tax_line_ids.amount", "state")
     def _compute_taxes_fields(self):
         """Compute invoice common taxes fields"""
@@ -133,7 +133,7 @@ class AccountInvoice(models.Model):
                     # Fecha Pago
                     inv._compute_invoice_payment_date()
 
-    @api.multi
+    
     @api.depends("invoice_line_ids", "invoice_line_ids.product_id", "state")
     def _compute_amount_fields(self):
         """Compute Purchase amount by product type"""
@@ -162,7 +162,7 @@ class AccountInvoice(models.Model):
                 )
                 inv.good_total_amount = inv._convert_to_local_currency(good_amount)
 
-    @api.multi
+    
     @api.depends("tax_line_ids", "state", "type")
     def _compute_isr_withholding_type(self):
         """Compute ISR Withholding Type
@@ -235,7 +235,7 @@ class AccountInvoice(models.Model):
         elif len(methods) > 1:
             return "mixed"
 
-    @api.multi
+    
     @api.depends("state")
     def _compute_in_invoice_payment_form(self):
         for inv in self:
@@ -253,7 +253,7 @@ class AccountInvoice(models.Model):
             else:
                 inv.payment_form = "04"
 
-    @api.multi
+    
     @api.depends("tax_line_ids", "tax_line_ids.amount", "state")
     def _compute_invoiced_itbis(self):
         """Compute invoice invoiced_itbis taking into account the currency"""
@@ -302,7 +302,7 @@ class AccountInvoice(models.Model):
                         if move_line.account_id.account_fiscal_type in witheld_type
                     ]
 
-    @api.multi
+    
     @api.depends("state", "type")
     def _compute_withheld_taxes(self):
         for inv in self:
@@ -370,14 +370,14 @@ class AccountInvoice(models.Model):
                         inv.withholded_itbis = withheld_itbis
                         inv.income_withholding = withheld_isr
 
-    @api.multi
+    
     @api.depends("invoiced_itbis", "cost_itbis", "state")
     def _compute_advance_itbis(self):
         for inv in self:
             if inv.state != "draft":
                 inv.advance_itbis = inv.invoiced_itbis - inv.cost_itbis
 
-    @api.multi
+    
     @api.depends("journal_id.purchase_type")
     def _compute_is_exterior(self):
         for inv in self:

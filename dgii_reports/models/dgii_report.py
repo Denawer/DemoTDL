@@ -45,7 +45,7 @@ class DgiiReport(models.Model):
     _description = "DGII Report"
     _inherit = ["mail.thread"]
 
-    @api.multi
+    
     def _compute_previous_report_pending(self):
         for report in self:
             previous = self.search(
@@ -101,7 +101,7 @@ class DgiiReport(models.Model):
         )
     ]
 
-    @api.multi
+    
     def _compute_606_fields(self):
         for rec in self:
             data = {
@@ -148,7 +148,7 @@ class DgiiReport(models.Model):
             rec.purchase_other_taxes = abs(data["purchase_other_taxes"])
             rec.purchase_legal_tip = abs(data["purchase_legal_tip"])
 
-    @api.multi
+    
     def _compute_607_fields(self):
         for rec in self:
             data = {
@@ -183,7 +183,7 @@ class DgiiReport(models.Model):
             rec.sale_other_taxes = abs(data["sale_other_taxes"])
             rec.sale_legal_tip = abs(data["sale_legal_tip"])
 
-    @api.multi
+    
     def _compute_608_fields(self):
         for rec in self:
             cancel_line_ids = self.env["dgii.reports.cancel.line"].search(
@@ -191,7 +191,7 @@ class DgiiReport(models.Model):
             )
             rec.cancel_records = len(cancel_line_ids)
 
-    @api.multi
+    
     def _compute_609_fields(self):
         for rec in self:
             data = {
@@ -329,7 +329,7 @@ class DgiiReport(models.Model):
 
         return super(DgiiReport, self).create(vals)
 
-    @api.multi
+    
     def write(self, vals):
         self._validate_date_format(vals.get("name"))
 
@@ -546,7 +546,7 @@ class DgiiReport(models.Model):
 
         return True if (payment_date and same_minor_period) else False
 
-    @api.multi
+    
     def _compute_606_data(self):
         for rec in self:
             PurchaseLine = self.env["dgii.reports.purchase.line"]
@@ -765,7 +765,7 @@ class DgiiReport(models.Model):
 
         return op_dict
 
-    @api.multi
+    
     def _set_payment_form_fields(self, payments_dict):
         for rec in self:
             rec.cash = payments_dict.get("cash")
@@ -794,7 +794,7 @@ class DgiiReport(models.Model):
             income_dict[invoice.income_type] += invoice.amount_untaxed_signed
         return income_dict
 
-    @api.multi
+    
     def _set_income_type_fields(self, income_dict):
         for rec in self:
             rec.opr_income = income_dict.get("01")
@@ -911,7 +911,7 @@ class DgiiReport(models.Model):
     def _set_csmr_fields_vals(self, csmr_dict):
         self.write(csmr_dict)
 
-    @api.multi
+    
     def _compute_607_data(self):
         for rec in self:
             SaleLine = self.env["dgii.reports.sale.line"]
@@ -1051,7 +1051,7 @@ class DgiiReport(models.Model):
             }
         )
 
-    @api.multi
+    
     def _compute_608_data(self):
         for rec in self:
             CancelLine = self.env["dgii.reports.cancel.line"]
@@ -1151,7 +1151,7 @@ class DgiiReport(models.Model):
             }
         )
 
-    @api.multi
+    
     def _compute_609_data(self):
         for rec in self:
             ExteriorLine = self.env["dgii.reports.exterior.line"]
@@ -1197,7 +1197,7 @@ class DgiiReport(models.Model):
 
             self._generate_609_txt(report_data, line)
 
-    @api.multi
+    
     def _generate_report(self):
         # Drop 607 NCF Operations for recompute
         self.env["dgii.reports.sale.summary"].search(
@@ -1210,7 +1210,7 @@ class DgiiReport(models.Model):
         self._compute_609_data()
         self.state = "generated"
 
-    @api.multi
+    
     def generate_report(self):
         if self.state == "generated":
             action = self.env.ref(
@@ -1236,7 +1236,7 @@ class DgiiReport(models.Model):
             else False
         )
 
-    @api.multi
+    
     def _invoice_status_sent(self):
         for report in self:
             PurchaseLine = self.env["dgii.reports.purchase.line"]
@@ -1283,7 +1283,7 @@ class DgiiReport(models.Model):
         )
         invoice_ids.write({"fiscal_status": "done"})
 
-    @api.multi
+    
     def state_sent(self):
         for report in self:
             report._invoice_status_sent()
