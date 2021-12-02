@@ -13,7 +13,7 @@ class DgiiReportsControllers(Controller):
         base_url = env["ir.config_parameter"].sudo().get_param("web.base.url")
 
         if str(ncf_rnc)[:1] == "B":
-            invoice_id = env["account.invoice"].search(
+            invoice_id = env["account.move"].search(
                 [("reference", "=", ncf_rnc)], limit=1
             )
             if invoice_id:
@@ -28,7 +28,7 @@ class DgiiReportsControllers(Controller):
                 }
                 action = action_map[invoice_id.type]
                 url = (
-                    "%s/web#id=%s&action=%s&model=account.invoice&view"
+                    "%s/web#id=%s&action=%s&model=account.move&view"
                     "_type=form" % (base_url, invoice_id.id, action.id)
                 )
 

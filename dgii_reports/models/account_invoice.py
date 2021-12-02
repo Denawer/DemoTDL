@@ -21,7 +21,7 @@ class InvoiceServiceTypeDetail(models.Model):
 
 
 class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     def _get_invoice_payment_widget(self):
         j = json.loads(self.payments_widget)

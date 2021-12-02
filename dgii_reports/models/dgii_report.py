@@ -348,7 +348,7 @@ class DgiiReport(models.Model):
             year, month, calendar.monthrange(int(year), int(month))[1]
         )
         invoice_ids = (
-            self.env["account.invoice"]
+            self.env["account.move"]
             .search(
                 [
                     ("fiscal_status", "=", "normal"),
@@ -379,7 +379,7 @@ class DgiiReport(models.Model):
         end_date = "{}-{}-{}".format(year, month, last_day)
 
         invoice_ids = (
-            self.env["account.invoice"]
+            self.env["account.move"]
             .search(
                 [
                     ("date_invoice", ">=", start_date),
@@ -531,7 +531,7 @@ class DgiiReport(models.Model):
         New reported invoices should not include any
         withholding amount nor payment date
         if payment was made after current period.
-        :param invoice: account.invoice object
+        :param invoice: account.move object
         :return: boolean
         """
         if not invoice.payment_date:
@@ -644,7 +644,7 @@ class DgiiReport(models.Model):
     def _get_sale_payments_forms(self, invoice_id):
         payments_dict = self._get_payments_dict()
         Payment = self.env["account.payment"]
-        Invoice = self.env["account.invoice"]
+        Invoice = self.env["account.move"]
 
         if invoice_id.type == "out_invoice":
             for payment in invoice_id._get_invoice_payment_widget():
@@ -1274,7 +1274,7 @@ class DgiiReport(models.Model):
         are searched and updated in this function.
         """
 
-        invoice_ids = self.env["account.invoice"].search(
+        invoice_ids = self.env["account.move"].search(
             [
                 ("state", "=", "paid"),
                 ("fiscal_status", "=", "normal"),
@@ -1364,7 +1364,7 @@ class DgiiReportPurchaseLine(models.Model):
     payment_type = fields.Char()
 
     invoice_partner_id = fields.Many2one("res.partner")
-    invoice_id = fields.Many2one("account.invoice")
+    invoice_id = fields.Many2one("account.move")
     credit_note = fields.Boolean()
 
 
@@ -1402,7 +1402,7 @@ class DgiiReportSaleLine(models.Model):
     others = fields.Float()
 
     invoice_partner_id = fields.Many2one("res.partner")
-    invoice_id = fields.Many2one("account.invoice")
+    invoice_id = fields.Many2one("account.move")
     credit_note = fields.Boolean()
 
 
@@ -1418,7 +1418,7 @@ class DgiiCancelReportLine(models.Model):
     anulation_type = fields.Char(size=2)
 
     invoice_partner_id = fields.Many2one("res.partner")
-    invoice_id = fields.Many2one("account.invoice")
+    invoice_id = fields.Many2one("account.move")
 
 
 class DgiiExteriorReportLine(models.Model):
@@ -1441,4 +1441,4 @@ class DgiiExteriorReportLine(models.Model):
     isr_withholding_date = fields.Date()
     presumed_income = fields.Float()
     withholded_isr = fields.Float()
-    invoice_id = fields.Many2one("account.invoice")
+    invoice_id = fields.Many2one("account.move")
